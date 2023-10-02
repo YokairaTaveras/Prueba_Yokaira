@@ -1,0 +1,99 @@
+﻿@page "/RegistroIngresos"
+@inject IngresosBLL IngresosBLL
+
+<EditForm model="Ingresos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h3>Registro de Ingresos.</h3>
+            </div>
+            <div class=card-body>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+                    <label>ID Cliente:</label>
+                    <div class="input-group mb-3">
+                        <InputNumber @bind-Value="ingresos.IngresoId" class="form-control" aria-describedby="BotonBuscar" />
+                        <button @onclick="Buscar" class="btn btn-outline-primary" type="button" id="BotonBuscar"><i class="oi oi-magnifying-glass" /></button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="Fecha">Fecha:</label>
+                    <InputDate @bind-Value="ingresos.Fecha" class="form-control" />
+                    <ValidationMessage For="@(() => ingresos.Fecha)" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="Concepto">Concepto:</label>
+                    <InputText @bind-Value="ingresos.Concepto" class="form-control" />
+                    <ValidationMessage For="@(() => ingresos.Concepto)" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="Monto">Monto:</label>
+                    <InputNumber @bind-Value="ingresos.Monto" class="form-control" />
+                    <ValidationMessage For="@(() => ingresos.Monto)" />
+
+                    <div class="card-footer d-flex justify-content-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-primary" @onclick="Nuevo">Nuevo <i class="oi oi-file" /></button>
+                            <button type="submit" class="btn btn-outline-success">Guardar <i class="oi oi-document" /></button>
+                            <button type="button" class="btn btn-outline-danger" @onclick="Eliminar">Eliminar <i class="oi oi-trash" /></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</EditForm>
+
+@code {
+    public int IngresoId { get; set; }
+    public Ingresos ingresos { get; set; } = new Ingresos();
+
+    public void Buscar()
+    {
+        var ingresoEncontrado = IngresosBLL.Buscar(ingresos.IngresoId);
+
+        if (ingresoEncontrado != null)
+        {
+            this.ingresos = ingresoEncontrado;
+        }
+    }
+
+    void Guardar()
+    {
+        if (Validate())
+            return;
+        if (IngresosBLL.Guardar(ingresos))
+        {
+            Nuevo();
+        }
+    }
+
+    void Nuevo()
+    {
+        ingresos = new Ingresos();
+    }
+
+    public void Eliminar()
+    {
+        if (Validate())
+        {
+            if (IngresosBLL.Eliminar(this.ingresos))
+            {
+                Nuevo();
+            }
+        }
+    }
+
+    bool Validate()
+    {
+        if (ingresos.IngresoId < 0)
+            return false;
+        if (ingresos.Monto < 0)
+            return false;
+        else
+            return true;
+    }
+}
