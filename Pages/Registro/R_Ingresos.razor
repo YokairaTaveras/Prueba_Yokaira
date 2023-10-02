@@ -1,5 +1,6 @@
 ﻿@page "/RegistroIngresos"
 @inject IngresosBLL IngresosBLL
+@inject NotificationService notificationService
 
 <EditForm model="Ingresos" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -64,7 +65,17 @@
     void Guardar()
     {
         if (Validate())
-            return;
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "se guardo",
+                    Detail = "Se ha guardado con exito",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        
         if (IngresosBLL.Guardar(ingresos))
         {
             Nuevo();
@@ -80,6 +91,14 @@
     {
         if (Validate())
         {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "se elimino",
+                    Detail = "Se ha eliminado con exito",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
             if (IngresosBLL.Eliminar(this.ingresos))
             {
                 Nuevo();

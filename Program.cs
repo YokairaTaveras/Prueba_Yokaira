@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Prueba_Yokaira.DAL;
 using Prueba_Yokaira.Data;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<Context>(options => options.UseSqlite(ConStr));
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<IngresosBLL>();
 var app = builder.Build();
 
