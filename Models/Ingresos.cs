@@ -4,6 +4,7 @@ namespace Prueba_Yokaira.Models
 {
     public class Ingresos
     {
+        [Key]
         public int IngresoId { get; set; }
 
         [Required(ErrorMessage = "Este campo es necesario")]
